@@ -1,0 +1,118 @@
+version: "3"
+volumes:
+  periodsdb-data:
+  marsdb-data:
+  earthdb-data:
+  marsminio-data:
+  earthminio-data:
+
+services:
+  # mars
+  periodsdb:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=${PERIODS_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${PERIODS_POSTGRES_PASSWORD}
+      - POSTGRES_DB=${PERIODS_POSTGRES_DB}
+    volumes:
+      - periodsdb-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  marsdb:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=${MARS_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${MARS_POSTGRES_PASSWORD}
+      - POSTGRES_DB=${MARS_POSTGRES_DB}
+    volumes:
+      - marsdb-data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+  earthdb:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=${EARTH_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${EARTH_POSTGRES_PASSWORD}
+      - POSTGRES_DB=${EARTH_POSTGRES_DB}
+    volumes:
+      - type: volume
+        source: earthdb-data
+        target: /var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+  earthminio:
+    image: quay.io/minio/minio:RELEASE.2023-12-20T01-00-02Z-cpuv1
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - earthminio-data:/data
+    environment:
+      - MINIO_ROOT_USER=${EARTH_MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${EARTH_MINIO_ROOT_PASSWORD}
+    command: server --console-address ":9001" /data
+  marsminio:
+    image: quay.io/minio/minio:RELEASE.2023-12-20T01-00-02Z-cpuv1
+    ports:
+      - "9002:9000"
+      - "9003:9001"
+    volumes:
+      - marsminio-data:/data
+    environment:
+      - MINIO_ROOT_USER=${MARS_MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MARS_MINIO_ROOT_PASSWORD}
+    command: server --console-address ":9001" /data
+  createbuckets:
+    image: quay.io/minio/mc:RELEASE.2023-12-20T07-14-22Z-cpuv1
+    environment:
+      - EARTH_MINIO_ROOT_USER=${EARTH_MINIO_ROOT_USER}
+      - EARTH_MINIO_ROOT_PASSWORD=${EARTH_MINIO_ROOT_PASSWORD}
+      - MARS_MINIO_ROOT_USER=${MARS_MINIO_ROOT_USER}
+      - MARS_MINIO_ROOT_PASSWORD=${MARS_MINIO_ROOT_PASSWORD}
+      - EARTH_MINIO_BUCKET=${EARTH_MINIO_BUCKET}
+      - MARS_MINIO_BUCKET=${MARS_MINIO_BUCKET}
+    depends_on:
+      - earthminio
+      - marsminio
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set earthminio http://earthminio:9000 $EARTH_MINIO_ROOT_USER $EARTH_MINIO_ROOT_PASSWORD;
+      /usr/bin/mc alias set marsminio  http://marsminio:9000  $MARS_MINIO_ROOT_USER  $MARS_MINIO_ROOT_PASSWORD;
+      /usr/bin/mc mb earthminio/$EARTH_MINIO_BUCKET;
+      /usr/bin/mc mb marsminio/$MARS_MINIO_BUCKET;
+      /usr/bin/mc anonymous set public earthminio/$EARTH_MINIO_BUCKET;
+      /usr/bin/mc anonymous set public marsminio/$MARS_MINIO_BUCKET;
+      exit 0;
+      "
+  adminer:
+    image: adminer:latest
+    ports:
+      - "5000:8080"
+    depends_on:
+      - periodsdb
+      - earthdb
+      - marsdb
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - 29092:29092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+# run with
+# docker compose -f .\compose.dev.yml up -d --build
+# podman compose -f .\compose.dev.yml up -d --build
