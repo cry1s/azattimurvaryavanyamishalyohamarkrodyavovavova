@@ -13,3 +13,6 @@
 [submodule "DelayService"]
 	path = DelayService
 	url = https://github.com/Sh1bari/DelayService
+[submodule "atomHack-system-react"]
+	path = atomHack-system-react
+	url = https://github.com/gramizor/atomHack-system-react

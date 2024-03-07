@@ -16,8 +16,6 @@ services:
       - POSTGRES_DB=${PERIODS_POSTGRES_DB}
     volumes:
       - periodsdb-data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
   marsdb:
     image: postgres:16-alpine
     environment:
@@ -26,8 +24,6 @@ services:
       - POSTGRES_DB=${MARS_POSTGRES_DB}
     volumes:
       - marsdb-data:/var/lib/postgresql/data
-    ports:
-      - "5433:5432"
   earthdb:
     image: postgres:16-alpine
     environment:
@@ -36,13 +32,10 @@ services:
       - POSTGRES_DB=${EARTH_POSTGRES_DB}
     volumes:
       - earthdb-data:/var/lib/postgresql/data
-    ports:
-      - "5434:5432"
   earthminio:
     image: quay.io/minio/minio:RELEASE.2023-12-20T01-00-02Z-cpuv1
     ports:
       - "9000:9000"
-      - "9001:9001"
     volumes:
       - earthminio-data:/data
     environment:
@@ -53,7 +46,6 @@ services:
     image: quay.io/minio/minio:RELEASE.2023-12-20T01-00-02Z-cpuv1
     ports:
       - "9002:9000"
-      - "9003:9001"
     volumes:
       - marsminio-data:/data
     environment:
@@ -104,9 +96,9 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT_HOST://kafka:29092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_HOST
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
   initservice:
     build:
@@ -129,32 +121,6 @@ services:
       - periodsdb
     environment:
       PORT: "${DS_PORT}"
-  marsback:
-    build:
-      context: ./AtomHackMarsService
-    ports:
-      - "${MARS_SERVICE_PORT}:${MARS_SERVICE_PORT}"
-    depends_on:
-      - kafka
-      - marsdb
-      - marsminio
-    environment:
-      MARS_DATABASE_AUTO_MIGRATE: ${MARS_DATABASE_AUTO_MIGRATE}
-      MARS_MINIO_ENDPOINT: ${MARS_MINIO_URL}
-      MARS_POSTGRES_USER: ${MARS_POSTGRES_USER}
-      MARS_POSTGRES_PASSWORD: ${MARS_POSTGRES_PASSWORD}
-      MARS_POSTGRES_DB: ${MARS_POSTGRES_DB}
-      MARS_POSTGRES_HOST: ${MARS_POSTGRES_HOST}
-      MARS_POSTGRES_URL: postgres://${MARS_POSTGRES_USER}:${MARS_POSTGRES_PASSWORD}@${MARS_POSTGRES_HOST}/${MARS_POSTGRES_DB}
-      MARS_MINIO_ROOT_USER: ${MARS_MINIO_ROOT_USER}
-      MARS_MINIO_ROOT_PASSWORD: ${MARS_MINIO_ROOT_PASSWORD}
-      MARS_MINIO_BUCKET: ${MARS_MINIO_BUCKET}
-      MARS_SERVICE_HOST: ${MARS_SERVICE_HOST}
-      MARS_SERVICE_PORT: ${MARS_SERVICE_PORT}
-      MARS_BOOTSTRAP_SERVER: ${MARS_BOOTSTRAP_SERVER}
-      MARS_KAFKA_TOPIC: ${MARS_KAFKA_TOPIC}
-      MARS_MAX_RETRY: ${MARS_MAX_RETRY}
-      MARS_RETURN_SUCCESSES: ${MARS_RETURN_SUCCESSES}
 # run with
 # docker compose -f .\compose.dev.yml up -d --build
 # podman compose -f .\compose.dev.yml up -d --build
