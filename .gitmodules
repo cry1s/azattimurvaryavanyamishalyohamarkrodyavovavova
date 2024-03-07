@@ -7,6 +7,9 @@
 [submodule "AtomHackFrontend"]
 	path = AtomHackFrontend
 	url = https://github.com/SicParv1sMagna/AtomHackFrontend
-[submodule "SenderService"]
-	path = SenderService
-	url = https://github.com/Sh1bari/SenderService
+[submodule "InitService"]
+	path = InitService
+	url = https://github.com/Sh1bari/InitService
+[submodule "DelayService"]
+	path = DelayService
+	url = https://github.com/Sh1bari/DelayService

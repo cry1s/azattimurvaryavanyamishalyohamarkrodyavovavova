@@ -35,9 +35,7 @@ services:
       - POSTGRES_PASSWORD=${EARTH_POSTGRES_PASSWORD}
       - POSTGRES_DB=${EARTH_POSTGRES_DB}
     volumes:
-      - type: volume
-        source: earthdb-data
-        target: /var/lib/postgresql/data
+      - earthdb-data:/var/lib/postgresql/data
     ports:
       - "5434:5432"
   earthminio:
@@ -112,19 +110,27 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-  senderservice:
+  initservice:
     build:
-      context: ./SenderService
+      context: ./InitService
     ports:
-      - "${SS_PORT}:${SS_PORT}"
+      - "${IS_PORT}:${IS_PORT}"
     depends_on:
       - periodsdb
     environment:
       DATABASE_URL: jdbc:postgresql://${PERIODS_POSTGRES_URL}
-      PORT: "${SS_PORT}"
+      PORT: "${IS_PORT}"
       DATABASE_USERNAME: ${PERIODS_POSTGRES_USER}
       DATABASE_PASSWORD: ${PERIODS_POSTGRES_PASSWORD}
-
+  delayservice:
+    build:
+      context: ./DelayService
+    ports:
+      - "${DS_PORT}:${DS_PORT}"
+    depends_on:
+      - periodsdb
+    environment:
+      PORT: "${DS_PORT}"
 # run with
 # docker compose -f .\compose.dev.yml up -d --build
 # podman compose -f .\compose.dev.yml up -d --build
