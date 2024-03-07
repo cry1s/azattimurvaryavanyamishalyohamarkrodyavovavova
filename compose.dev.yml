@@ -112,6 +112,18 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  senderservice:
+    build:
+      context: ./SenderService
+    ports:
+      - "${SS_PORT}:${SS_PORT}"
+    depends_on:
+      - periodsdb
+    environment:
+      DATABASE_URL: jdbc:postgresql://${PERIODS_POSTGRES_URL}
+      PORT: "${SS_PORT}"
+      DATABASE_USERNAME: ${PERIODS_POSTGRES_USER}
+      DATABASE_PASSWORD: ${PERIODS_POSTGRES_PASSWORD}
 
 # run with
 # docker compose -f .\compose.dev.yml up -d --build
