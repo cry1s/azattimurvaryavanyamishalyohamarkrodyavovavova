@@ -111,6 +111,11 @@ services:
   initservice:
     build:
       context: ./InitService
+      args:
+        PORT: "${IS_PORT}"
+        DATABASE_URL: "jdbc:postgresql://${PERIODS_POSTGRES_URL}"
+        DATABASE_USERNAME: "${PERIODS_POSTGRES_USER}"
+        DATABASE_PASSWORD: "${PERIODS_POSTGRES_PASSWORD}"
     ports:
       - "${IS_PORT}:${IS_PORT}"
     depends_on:
@@ -123,6 +128,8 @@ services:
   delayservice:
     build:
       context: ./DelayService
+      args:
+        PORT: "${DS_PORT}"
     ports:
       - "${DS_PORT}:${DS_PORT}"
     depends_on:
