@@ -16,3 +16,6 @@
 [submodule "atomHack-system-react"]
 	path = atomHack-system-react
 	url = https://github.com/gramizor/atomHack-system-react
+[submodule "AtomHackSenderService"]
+	path = AtomHackSenderService
+	url = https://github.com/certified-juniors/AtomHackSenderService
