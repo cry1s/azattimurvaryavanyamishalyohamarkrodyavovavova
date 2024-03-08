@@ -101,12 +101,13 @@ services:
       - zookeeper
     ports:
       - 29092:29092
+      - 29093:29093
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT_HOST://kafka:29092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_HOST
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://${MARS_BOOTSTRAP_SERVER},PLAINTEXT_HOST://${MARS_KAFKA_CONSUMER}
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT_HOST:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
   initservice:
     build:
@@ -176,6 +177,31 @@ services:
     depends_on:
       - initservice
       - delayservice
+  senderservice:
+    build:
+      context: ./AtomHackSenderService
+    ports:
+      - "${SS_PORT}:${SS_PORT}"
+    depends_on:
+      - kafka
+      - periodsdb
+      - marsminio
+    environment:
+      SS_PORT: "${SS_PORT}"
+      MARS_KAFKA_CONSUMER: ${MARS_KAFKA_CONSUMER}
+      MARS_KAFKA_TOPIC: ${MARS_KAFKA_TOPIC}
+      DS_PORT: ${DS_PORT}
+      DS_HOST: ${DS_HOST}
+      MARS_MINIO_ROOT_USER: ${MARS_MINIO_ROOT_USER}
+      MARS_MINIO_ROOT_PASSWORD: ${MARS_MINIO_ROOT_PASSWORD}
+      MARS_MINIO_BUCKET: ${MARS_MINIO_BUCKET}
+      MARS_MINIO_HOST: ${MARS_MINIO_HOST}
+      MARS_MINIO_PORT: ${MARS_MINIO_PORT}
+      PERIODS_POSTGRES_USER: ${PERIODS_POSTGRES_USER}
+      PERIODS_POSTGRES_PASSWORD: ${PERIODS_POSTGRES_PASSWORD}
+      PERIODS_POSTGRES_DB: ${PERIODS_POSTGRES_DB}
+      PERIODS_POSTGRES_URL: ${PERIODS_POSTGRES_URL}
+      PERIODS_POSTGRES_HOST: ${PERIODS_POSTGRES_HOST}
 # run with
 # docker compose -f .\compose.dev.yml up -d --build
 # podman compose -f .\compose.dev.yml up -d --build
