@@ -162,6 +162,20 @@ services:
       MARS_KAFKA_TOPIC: ${MARS_KAFKA_TOPIC}
       MARS_MAX_RETRY: ${MARS_MAX_RETRY}
       MARS_RETURN_SUCCESSES: ${MARS_RETURN_SUCCESSES}
+  atominit:
+    build:
+      context: ./atomHack-system-react
+      args:
+        - VITE_DELAY_SERVICE_HOST=${DS_URL}
+        - VITE_INITAPI_SERVICE_HOST=${IS_URL}
+    environment:
+      - VITE_DELAY_SERVICE_HOST=${DS_URL}
+      - VITE_INITAPI_SERVICE_HOST=${IS_URL}
+    ports:
+      - "30003:80"
+    depends_on:
+      - initservice
+      - delayservice
 # run with
 # docker compose -f .\compose.dev.yml up -d --build
 # podman compose -f .\compose.dev.yml up -d --build
