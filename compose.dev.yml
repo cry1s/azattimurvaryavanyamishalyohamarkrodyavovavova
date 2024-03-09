@@ -188,6 +188,7 @@ services:
       - kafka
       - periodsdb
       - marsminio
+      - delayservice
     environment:
       SS_PORT: "${SS_PORT}"
       MARS_KAFKA_CONSUMER: ${MARS_KAFKA_CONSUMER}
