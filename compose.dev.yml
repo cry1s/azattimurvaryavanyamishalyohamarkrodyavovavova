@@ -167,6 +167,8 @@ services:
       MARS_KAFKA_TOPIC: ${MARS_KAFKA_TOPIC}
       MARS_MAX_RETRY: ${MARS_MAX_RETRY}
       MARS_RETURN_SUCCESSES: ${MARS_RETURN_SUCCESSES}
+      MARS_HOST: http://${MARS_SERVICE_HOST}
+      MARS_PORT: ${MARS_SERVICE_PORT}
   atominit:
     build:
       context: ./atomHack-system-react

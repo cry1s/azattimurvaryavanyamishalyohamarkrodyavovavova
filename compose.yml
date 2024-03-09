@@ -196,6 +196,8 @@ services:
       PERIODS_POSTGRES_DB: ${PERIODS_POSTGRES_DB}
       PERIODS_POSTGRES_URL: ${PERIODS_POSTGRES_URL}
       PERIODS_POSTGRES_HOST: ${PERIODS_POSTGRES_HOST}
+      MARS_HOST: http://${MARS_SERVICE_HOST}
+      MARS_PORT: ${MARS_SERVICE_PORT}
   atommars:
     build:
       context: ./AtomHackFrontend
