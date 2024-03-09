@@ -1,9 +1,6 @@
 [submodule "AtomHackMarsService"]
 	path = AtomHackMarsService
 	url = https://github.com/SicParv1sMagna/AtomHackMarsService
-[submodule "AtomHackBackend"]
-	path = AtomHackBackend
-	url = https://github.com/SicParv1sMagna/AtomHackBackend
 [submodule "AtomHackFrontend"]
 	path = AtomHackFrontend
 	url = https://github.com/SicParv1sMagna/AtomHackFrontend
