@@ -16,3 +16,6 @@
 [submodule "AtomHackSenderService"]
 	path = AtomHackSenderService
 	url = https://github.com/certified-juniors/AtomHackSenderService
+[submodule "AtomHackEarthBackend"]
+	path = AtomHackEarthBackend
+	url = https://github.com/certified-juniors/AtomHackEarthBackend
