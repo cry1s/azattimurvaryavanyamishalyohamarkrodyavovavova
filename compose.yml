@@ -206,6 +206,29 @@ services:
     depends_on:
       - initservice
       - delayservice
+  earthback:
+    build:
+      context: ./AtomHackEarthBackend
+    ports:
+      - "${EARTH_SERVICE_PORT}:${EARTH_SERVICE_PORT}"
+    depends_on:
+      - earthdb
+      - earthminio
+    environment:
+      EARTH_DATABASE_AUTO_MIGRATE: ${EARTH_DATABASE_AUTO_MIGRATE}
+      EARTH_MINIO_ENDPOINT: ${EARTH_MINIO_URL}
+      EARTH_POSTGRES_USER: ${EARTH_POSTGRES_USER}
+      EARTH_POSTGRES_PASSWORD: ${EARTH_POSTGRES_PASSWORD}
+      EARTH_POSTGRES_DB: ${EARTH_POSTGRES_DB}
+      EARTH_POSTGRES_HOST: ${EARTH_POSTGRES_HOST}
+      EARTH_POSTGRES_URL: postgres://${EARTH_POSTGRES_USER}:${EARTH_POSTGRES_PASSWORD}@${EARTH_POSTGRES_HOST}/${EARTH_POSTGRES_DB}
+      EARTH_MINIO_ROOT_USER: ${EARTH_MINIO_ROOT_USER}
+      EARTH_MINIO_ROOT_PASSWORD: ${EARTH_MINIO_ROOT_PASSWORD}
+      EARTH_MINIO_BUCKET: ${EARTH_MINIO_BUCKET}
+      EARTH_MINIO_HOST: ${EARTH_MINIO_HOST}
+      EARTH_MINIO_PORT: ${EARTH_MINIO_PORT}
+      EARTH_SERVICE_HOST: ${EARTH_SERVICE_HOST}
+      EARTH_SERVICE_PORT: ${EARTH_SERVICE_PORT}
 # run with
 # docker compose -f .\compose.dev.yml up -d --build
 # podman compose -f .\compose.dev.yml up -d --build
