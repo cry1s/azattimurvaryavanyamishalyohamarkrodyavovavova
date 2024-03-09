@@ -163,6 +163,31 @@ services:
     depends_on:
       - initservice
       - delayservice
+  senderservice:
+    build:
+      context: ./AtomHackSenderService
+    ports:
+      - "${SS_PORT}:3000"
+    depends_on:
+      - kafka
+      - periodsdb
+      - marsminio
+    environment:
+      SS_PORT: "${SS_PORT}"
+      MARS_KAFKA_CONSUMER: ${MARS_KAFKA_CONSUMER}
+      MARS_KAFKA_TOPIC: ${MARS_KAFKA_TOPIC}
+      DS_PORT: ${DS_PORT}
+      DS_HOST: ${DS_HOST}
+      MARS_MINIO_ROOT_USER: ${MARS_MINIO_ROOT_USER}
+      MARS_MINIO_ROOT_PASSWORD: ${MARS_MINIO_ROOT_PASSWORD}
+      MARS_MINIO_BUCKET: ${MARS_MINIO_BUCKET}
+      MARS_MINIO_HOST: ${MARS_MINIO_HOST}
+      MARS_MINIO_PORT: ${MARS_MINIO_PORT}
+      PERIODS_POSTGRES_USER: ${PERIODS_POSTGRES_USER}
+      PERIODS_POSTGRES_PASSWORD: ${PERIODS_POSTGRES_PASSWORD}
+      PERIODS_POSTGRES_DB: ${PERIODS_POSTGRES_DB}
+      PERIODS_POSTGRES_URL: ${PERIODS_POSTGRES_URL}
+      PERIODS_POSTGRES_HOST: ${PERIODS_POSTGRES_HOST}
 # run with
 # docker compose -f .\compose.dev.yml up -d --build
 # podman compose -f .\compose.dev.yml up -d --build
