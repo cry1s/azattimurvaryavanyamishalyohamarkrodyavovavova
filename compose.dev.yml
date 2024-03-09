@@ -204,6 +204,22 @@ services:
       PERIODS_POSTGRES_DB: ${PERIODS_POSTGRES_DB}
       PERIODS_POSTGRES_URL: ${PERIODS_POSTGRES_URL}
       PERIODS_POSTGRES_HOST: ${PERIODS_POSTGRES_HOST}
+  atommars:
+    build:
+      context: ./AtomHackFrontend
+      args:
+        - VITE_MARS_API=${MARS_BACKEND_URL}
+        - VITE_MARS_MINIO=${MARS_MINIO_URL}
+        - VITE_SENDER_SERVICE=${SS_URL}
+    environment:
+      - VITE_MARS_API=${MARS_BACKEND_URL}
+      - VITE_MARS_MINIO=${MARS_MINIO_URL}
+      - VITE_SENDER_SERVICE=${SS_URL}
+    ports:
+      - "30002:80"
+    depends_on:
+      - initservice
+      - delayservice
 # run with
 # docker compose -f .\compose.dev.yml up -d --build
 # podman compose -f .\compose.dev.yml up -d --build
