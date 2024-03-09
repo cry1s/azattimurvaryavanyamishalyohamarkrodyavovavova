@@ -183,7 +183,7 @@ services:
     build:
       context: ./AtomHackSenderService
     ports:
-      - "${SS_PORT}:${SS_PORT}"
+      - "${SS_PORT}:3000"
     depends_on:
       - kafka
       - periodsdb
@@ -192,8 +192,8 @@ services:
       SS_PORT: "${SS_PORT}"
       MARS_KAFKA_CONSUMER: ${MARS_KAFKA_CONSUMER}
       MARS_KAFKA_TOPIC: ${MARS_KAFKA_TOPIC}
-      DS_PORT: ${DS_PORT}
-      DS_HOST: ${DS_HOST}
+      DS_PORT: ${EARTH_SERVICE_PORT}
+      DS_HOST: ${EARTH_SERVICE_HOST}
       MARS_MINIO_ROOT_USER: ${MARS_MINIO_ROOT_USER}
       MARS_MINIO_ROOT_PASSWORD: ${MARS_MINIO_ROOT_PASSWORD}
       MARS_MINIO_BUCKET: ${MARS_MINIO_BUCKET}
