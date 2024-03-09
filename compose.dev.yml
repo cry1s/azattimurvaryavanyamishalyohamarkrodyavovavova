@@ -131,12 +131,14 @@ services:
       context: ./DelayService
       args:
         PORT: "${DS_PORT}"
+        HOST: http://${EARTH_SERVICE_HOST}:${EARTH_SERVICE_PORT}
     ports:
       - "${DS_PORT}:${DS_PORT}"
     depends_on:
       - periodsdb
     environment:
       PORT: "${DS_PORT}"
+      HOST: http://${EARTH_SERVICE_HOST}:${EARTH_SERVICE_PORT}
   marsback:
     build:
       context: ./AtomHackMarsService
