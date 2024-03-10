@@ -231,8 +231,8 @@ services:
     ports:
       - "30002:80"
     depends_on:
-      - initservice
-      - delayservice
+      - marsback
+      - marsminio
   earthback:
     build:
       context: ./AtomHackEarthBackend
@@ -256,6 +256,20 @@ services:
       EARTH_MINIO_PORT: ${EARTH_MINIO_PORT}
       EARTH_SERVICE_HOST: ${EARTH_SERVICE_HOST}
       EARTH_SERVICE_PORT: ${EARTH_SERVICE_PORT}
+  atomearth:
+    build:
+      context: ./AtomHackFrontendEarth
+      args:
+        - VITE_EARTH_API=${EARTH_SERVICE_URL}
+        - VITE_EARTH_MINIO=${EARTH_MINIO_URL}
+    environment:
+      - VITE_EARTH_API=${EARTH_SERVICE_URL}
+      - VITE_EARTH_MINIO=${EARTH_MINIO_URL}
+    ports:
+      - "30001:80"
+    depends_on:
+      - earthback
+      - earthminio
 # run with
 # docker compose -f .\compose.dev.yml up -d --build
 # podman compose -f .\compose.dev.yml up -d --build
