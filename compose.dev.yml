@@ -112,11 +112,6 @@ services:
   initservice:
     build:
       context: ./InitService
-      args:
-        PORT: "${IS_PORT}"
-        DATABASE_URL: "jdbc:postgresql://${PERIODS_POSTGRES_URL}"
-        DATABASE_USERNAME: "${PERIODS_POSTGRES_USER}"
-        DATABASE_PASSWORD: "${PERIODS_POSTGRES_PASSWORD}"
     ports:
       - "${IS_PORT}:${IS_PORT}"
     depends_on:
@@ -175,9 +170,17 @@ services:
       args:
         - VITE_DELAY_SERVICE_HOST=${DS_URL}
         - VITE_INITAPI_SERVICE_HOST=${IS_URL}
+        - VITE_SENDER_SERVICE_HOST=${SS_URL}
+        - VITE_LINK_TO_EARTH_HOST=${LINK_TO_EARTH_HOST}
+        - VITE_LINK_TO_MARS_HOST=${LINK_TO_MARS_HOST}
+        - VITE_LINK_TO_INIT_HOST=${LINK_TO_INIT_HOST}
     environment:
       - VITE_DELAY_SERVICE_HOST=${DS_URL}
       - VITE_INITAPI_SERVICE_HOST=${IS_URL}
+      - VITE_SENDER_SERVICE_HOST=${SS_URL}
+      - VITE_LINK_TO_EARTH_HOST=${LINK_TO_EARTH_HOST}
+      - VITE_LINK_TO_MARS_HOST=${LINK_TO_MARS_HOST}
+      - VITE_LINK_TO_INIT_HOST=${LINK_TO_INIT_HOST}
     ports:
       - "30003:80"
     depends_on:
@@ -210,6 +213,8 @@ services:
       PERIODS_POSTGRES_DB: ${PERIODS_POSTGRES_DB}
       PERIODS_POSTGRES_URL: ${PERIODS_POSTGRES_URL}
       PERIODS_POSTGRES_HOST: ${PERIODS_POSTGRES_HOST}
+      MARS_HOST: http://${MARS_SERVICE_HOST}
+      MARS_PORT: ${MARS_SERVICE_PORT}
   atommars:
     build:
       context: ./AtomHackFrontend
