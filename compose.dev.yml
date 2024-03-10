@@ -102,6 +102,7 @@ services:
     ports:
       - 29092:29092
       - 29093:29093
+    restart: always
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
