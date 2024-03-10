@@ -5,6 +5,14 @@
 * https://atomearth.cry1s.ru/
 * https://atominit.cry1s.ru/
 
+## Как склонировать проект
+
+Так как проект использует подмодули, то для клонирования проекта необходимо выполнить:
+
+```bash
+git clone https://github.com/cry1s/azattimurvaryavanyamishalyohamarkrodyavovavova.git --recursive
+```
+
 ## Как запустить проект
 
 Чтобы запустить этот проект, выполните следующие шаги:
