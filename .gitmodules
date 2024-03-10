@@ -19,3 +19,6 @@
 [submodule "AtomHackEarthBackend"]
 	path = AtomHackEarthBackend
 	url = https://github.com/certified-juniors/AtomHackEarthBackend
+[submodule "AtomHackFrontendEarth"]
+	path = AtomHackFrontendEarth
+	url = https://github.com/CAPVOK/AtomHackFrontendEarth.git
