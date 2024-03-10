@@ -5,6 +5,7 @@ volumes:
   earthdb-data:
   marsminio-data:
   earthminio-data:
+  delayservice-tmp:
 
 services:
   # mars
@@ -122,6 +123,8 @@ services:
         HOST: http://${EARTH_SERVICE_HOST}:${EARTH_SERVICE_PORT}
     ports:
       - "${DS_PORT}:${DS_PORT}"
+    volumes:
+      - delayservice-tmp:/tmp
     depends_on:
       - periodsdb
     environment:
