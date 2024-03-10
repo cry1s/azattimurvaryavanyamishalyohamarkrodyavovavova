@@ -137,6 +137,7 @@ services:
   marsback:
     build:
       context: ./AtomHackMarsService
+    restart: always
     ports:
       - "${MARS_SERVICE_PORT}:${MARS_SERVICE_PORT}"
     depends_on:
@@ -191,6 +192,7 @@ services:
       context: ./AtomHackSenderService
     ports:
       - "${SS_PORT}:3000"
+    restart: always
     depends_on:
       - kafka
       - periodsdb
